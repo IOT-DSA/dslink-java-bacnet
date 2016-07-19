@@ -373,23 +373,25 @@ public class LocalBacnetPoint extends EditablePoint {
 
 		LocalEventStateProperty eventStateProperty = new LocalEventStateProperty(objectId,
 				PropertyIdentifier.eventState, this, node, propertyNode);
-		if (b != null) b.build();
+		if (b != null)
+			b.build();
 		propertyIdToLocalProperty.put(PropertyIdentifier.eventState, eventStateProperty);
 	}
-	
+
 	protected void setupPolarityProperty(String name) {
 		Node propertyNode = node.getChild(name);
 		NodeBuilder b = null;
 		if (null != propertyNode) {
-			
+
 		} else {
 			b = node.createChild(name);
 			propertyNode = b.getChild();
 		}
-		
-		LocalPolarityProperty polarityProperty = new LocalPolarityProperty(objectId,
-				PropertyIdentifier.polarity, this, node, propertyNode);
-		if (b != null) b.build();
+
+		LocalPolarityProperty polarityProperty = new LocalPolarityProperty(objectId, PropertyIdentifier.polarity, this,
+				node, propertyNode);
+		if (b != null)
+			b.build();
 		propertyIdToLocalProperty.put(PropertyIdentifier.polarity, polarityProperty);
 	}
 
@@ -424,6 +426,14 @@ public class LocalBacnetPoint extends EditablePoint {
 		propertyIdToLocalProperty.put(PropertyIdentifier.outOfService, outOfServiceProperty);
 	}
 
+	protected void setupPriorityArrayProperty(String name) {
+
+	}
+
+	protected void setupReqlinshDefaultProperty(String name) {
+
+	}
+
 	private void setupRequiredProperty() {
 
 		ObjectType ot = objectId.getObjectType();
@@ -431,8 +441,7 @@ public class LocalBacnetPoint extends EditablePoint {
 		List<PropertyTypeDefinition> defs = ObjectProperties.getRequiredPropertyTypeDefinitions(ot);
 
 		for (PropertyTypeDefinition def : defs) {
-			// System.out.println(def.getClazz() + " : " +
-			// def.getPropertyIdentifier());
+			//System.out.println(def.getClazz() + " : " + def.getPropertyIdentifier());
 			initializeRequiredProperty(def);
 		}
 		LOGGER.info("all properties are set up");
@@ -473,6 +482,10 @@ public class LocalBacnetPoint extends EditablePoint {
 			setupOutOfServiceProperty(PropertyIdentifier.outOfService.toString());
 		} else if (propId.equals(PropertyIdentifier.polarity)) {
 			setupPolarityProperty(PropertyIdentifier.polarity.toString());
+		} else if (propId.equals(PropertyIdentifier.priorityArray)) {
+			setupPriorityArrayProperty(PropertyIdentifier.priorityArray.toString());
+		} else if (propId.equals(PropertyIdentifier.relinquishDefault)) {
+			setupReqlinshDefaultProperty(PropertyIdentifier.relinquishDefault.toString());
 		}
 
 	}
@@ -822,7 +835,7 @@ public class LocalBacnetPoint extends EditablePoint {
 
 			ValueType vt;
 			Value val;
-			
+
 			switch (dataType) {
 			case BINARY: {
 				String off = (unitsDescription.size() > 0) ? unitsDescription.get(0) : "0";
