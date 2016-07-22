@@ -1,15 +1,10 @@
 package bacnet.properties;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.dsa.iot.dslink.node.Node;
-import org.dsa.iot.dslink.node.Permission;
 import org.dsa.iot.dslink.node.Writable;
-import org.dsa.iot.dslink.node.actions.Action;
-import org.dsa.iot.dslink.node.actions.ActionResult;
-import org.dsa.iot.dslink.node.actions.Parameter;
 import org.dsa.iot.dslink.node.value.Value;
 import org.dsa.iot.dslink.node.value.ValuePair;
 import org.dsa.iot.dslink.node.value.ValueType;
@@ -21,7 +16,6 @@ import com.serotonin.bacnet4j.type.Encodable;
 import com.serotonin.bacnet4j.type.enumerated.EngineeringUnits;
 import com.serotonin.bacnet4j.type.enumerated.PropertyIdentifier;
 import com.serotonin.bacnet4j.type.primitive.ObjectIdentifier;
-import com.serotonin.bacnet4j.type.primitive.Real;
 
 import bacnet.LocalBacnetPoint;
 
@@ -63,10 +57,8 @@ public class LocalUnitsProperty extends LocalBacnetProperty {
 		public void handle(ValuePair event) {
 			if (!event.isFromExternalSource()) return;
 			Value newVal = event.getCurrent();
-			units = parseEngineeringUnits(newVal.getString());
-			
-			bacnetObj.writeProperty(propertyId, units);
-			
+			units = parseEngineeringUnits(newVal.getString());		
+			bacnetObj.writeProperty(propertyId, units);	
 			node.setAttribute(propertyId.toString(), newVal);
 		}
 	}
