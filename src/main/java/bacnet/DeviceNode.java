@@ -441,6 +441,9 @@ public class DeviceNode extends DeviceFolder {
 			return;
 
 		subscribedPoints.put(point.oid, point);
+		if (conn.localDevice != null) {
+			point.justUpdateValue();
+		}
 		if (pollingFuture == null) {
 			startPolling();
 		}
@@ -473,14 +476,18 @@ public class DeviceNode extends DeviceFolder {
 					return;
 				}
 
-				PropertyReferences refs = new PropertyReferences();
-				for (ObjectIdentifier oid : subscribedPoints.keySet()) {
-					DeviceFolder.addPropertyReferences(refs, oid);
-				}
-				getProperties(refs, new ConcurrentHashMap<ObjectIdentifier, BacnetPoint>(subscribedPoints));
+				poll();
 			}
 		}, 0, interval, TimeUnit.MILLISECONDS);
 
+	}
+	
+	private void poll() {
+		PropertyReferences refs = new PropertyReferences();
+		for (ObjectIdentifier oid : subscribedPoints.keySet()) {
+			DeviceFolder.addPropertyReferences(refs, oid);
+		}
+		getProperties(refs, new ConcurrentHashMap<ObjectIdentifier, BacnetPoint>(subscribedPoints));
 	}
 
 	@Override

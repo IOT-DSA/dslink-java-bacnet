@@ -263,6 +263,7 @@ public class BacnetLink {
 	}
 
 	void setupPoint(final BacnetPoint point, final DeviceFolder devicefold) {
+		point.node.setShouldPostCachedValue(false);
 		if (devicefold.conn.localDevice == null) {
 			devicefold.conn.stop();
 			return;

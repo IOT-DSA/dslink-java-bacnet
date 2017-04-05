@@ -33,11 +33,14 @@ import org.dsa.iot.historian.utils.QueryData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.serotonin.bacnet4j.ServiceFuture;
 import com.serotonin.bacnet4j.enums.Month;
 import com.serotonin.bacnet4j.exception.BACnetErrorException;
 import com.serotonin.bacnet4j.exception.BACnetException;
 import com.serotonin.bacnet4j.obj.ObjectProperties;
+import com.serotonin.bacnet4j.service.acknowledgement.ReadPropertyAck;
 import com.serotonin.bacnet4j.service.acknowledgement.ReadRangeAck;
+import com.serotonin.bacnet4j.service.confirmed.ReadPropertyRequest;
 import com.serotonin.bacnet4j.service.confirmed.ReadRangeRequest;
 import com.serotonin.bacnet4j.service.confirmed.ReadRangeRequest.ByPosition;
 import com.serotonin.bacnet4j.service.confirmed.ReadRangeRequest.BySequenceNumber;
@@ -62,6 +65,7 @@ import com.serotonin.bacnet4j.type.primitive.SignedInteger;
 import com.serotonin.bacnet4j.type.primitive.Time;
 import com.serotonin.bacnet4j.type.primitive.UnsignedInteger;
 import com.serotonin.bacnet4j.util.PropertyReferences;
+import com.serotonin.bacnet4j.util.PropertyValues;
 import com.serotonin.bacnet4j.util.RequestUtils;
 
 import bacnet.DeviceFolder.CovListener;
@@ -923,10 +927,10 @@ public class BacnetPoint {
 				val = new Value(presentValue);
 			}
 			}
-			if (!areEqual(vt, node.getValueType()) || !val.equals(node.getValue())) {
+//			if (!areEqual(vt, node.getValueType()) || !val.equals(node.getValue())) {
 				node.setValueType(vt);
 				node.setValue(val);
-			}
+//			}
 			Value units = null;
 			if (!(Utils.isOneOf(objectTypeId, ObjectType.binaryInput, ObjectType.binaryOutput, ObjectType.binaryValue,
 					ObjectType.multiStateInput, ObjectType.multiStateOutput, ObjectType.multiStateValue,
@@ -1460,6 +1464,18 @@ public class BacnetPoint {
 		try {
 			devicefold.getProperties(refs, points);
 		} catch (Exception e) {
+			LOGGER.debug("", e);
+		}
+	}
+	
+	public void justUpdateValue() {
+		ServiceFuture fut = folder.conn.localDevice.send(folder.root.getRemoteDevice(), new ReadPropertyRequest(oid, PropertyIdentifier.presentValue));
+		try {
+			ReadPropertyAck ack = fut.get();
+			Encodable encodable = ack.getValue();
+			setPresentValue(PropertyValues.getString(encodable), pid);
+			update();
+		} catch (BACnetException e) {
 			LOGGER.debug("", e);
 		}
 	}
