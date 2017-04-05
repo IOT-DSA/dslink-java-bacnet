@@ -169,10 +169,10 @@ public class LocalDeviceFolder extends EditableFolder {
 					LocalBacnetPoint point = new LocalBacnetPoint(this, node, child);
 					point.restoreLastSession();
 				} else {
-					node.removeChild(child);
+					node.removeChild(child, false);
 				}
 			} else if (child.getAction() == null && child != root.getStatusNode()) {
-				node.removeChild(child);
+				node.removeChild(child, false);
 			}
 		}
 	}

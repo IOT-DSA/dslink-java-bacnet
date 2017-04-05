@@ -159,7 +159,7 @@ public class DeviceNode extends DeviceFolder {
 			device = d;
 		}
 		statnode.setValue(new Value("enabled"));
-		node.removeChild("enable");
+		node.removeChild("enable", false);
 		Action act = new Action(Permission.READ, new Handler<ActionResult>() {
 			public void handle(ActionResult event) {
 				disable(true);
@@ -189,7 +189,7 @@ public class DeviceNode extends DeviceFolder {
 		} else {
 			statnode.setValue(new Value("not connected"));
 		}
-		node.removeChild("disable");
+		node.removeChild("disable", false);
 		Action act = new Action(Permission.READ, new Handler<ActionResult>() {
 			public void handle(ActionResult event) {
 				enable(true);

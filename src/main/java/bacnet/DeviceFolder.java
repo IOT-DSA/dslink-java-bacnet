@@ -129,10 +129,10 @@ public class DeviceFolder {
 				if (ot != null && inum != null && cov != null && sett != null) {
 					new BacnetPoint(this, node, child);
 				} else {
-					node.removeChild(child);
+					node.removeChild(child, false);
 				}
 			} else if (child.getAction() == null && child != root.getStatusNode() && child != root.getEventNode()) {
-				node.removeChild(child);
+				node.removeChild(child, false);
 			}
 		}
 	}
@@ -536,7 +536,7 @@ public class DeviceFolder {
 
 	protected void remove() {
 		node.clearChildren();
-		node.getParent().removeChild(node);
+		node.getParent().removeChild(node, false);
 	}
 
 	protected void rename(String newname) {

@@ -100,7 +100,7 @@ public abstract class EditableFolder {
 	private void duplicate(String newname) {
 		if (newname != null && newname.length() > 0 && !newname.equals(node.getName())) {
 			Node parent = node.getParent();
-			parent.removeChild(node);
+			parent.removeChild(node, false);
 			node = parent.createChild(newname, true).build();
 		}
 	}
@@ -113,7 +113,7 @@ public abstract class EditableFolder {
 
 	protected void remove() {
 		node.clearChildren();
-		node.getParent().removeChild(node);
+		node.getParent().removeChild(node, false);
 	}
 
 	private void setRemoveAction() {

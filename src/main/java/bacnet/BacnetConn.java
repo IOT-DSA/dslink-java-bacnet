@@ -437,9 +437,9 @@ abstract class BacnetConn {
 		if (localDevice != null) {
 			localDevice.terminate();
 			localDevice = null;
-			node.removeChild(ACTION_STOP);
-			node.removeChild(ACTION_DISCOVER_DEVICES);
-			node.removeChild(ACTION_ADD_DEVICE);
+			node.removeChild(ACTION_STOP, false);
+			node.removeChild(ACTION_DISCOVER_DEVICES, false);
+			node.removeChild(ACTION_ADD_DEVICE, false);
 			statnode.setValue(new Value(NODE_STATUS_STOPPED));
 		}
 	}
@@ -503,7 +503,7 @@ abstract class BacnetConn {
 		stop();
 		node.clearChildren();
 		link.connections.remove(getMe());
-		node.getParent().removeChild(node);
+		node.getParent().removeChild(node, false);
 
 		shutdown();
 	}
@@ -826,7 +826,7 @@ abstract class BacnetConn {
 						if (dn != null)
 							dn.restoreLastSession();
 						else {
-							node.removeChild(child);
+							node.removeChild(child, false);
 						}
 
 					}
@@ -840,7 +840,7 @@ abstract class BacnetConn {
 				if (dn != null)
 					dn.restoreLastSession();
 				else {
-					node.removeChild(child);
+					node.removeChild(child, false);
 				}
 			}
 
@@ -848,7 +848,7 @@ abstract class BacnetConn {
 			localDeviceNode = new LocalDeviceNode(getMe(), child, localDevice);
 			localDeviceNode.restoreLastSession();
 		} else if (child.getAction() == null && !child.getName().equals("STATUS")) {
-			node.removeChild(child);
+			node.removeChild(child, false);
 		}
 	}
 
