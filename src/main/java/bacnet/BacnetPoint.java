@@ -260,7 +260,14 @@ public class BacnetPoint {
 			if (!(objectTypeDescription.startsWith("Analog") || objectTypeDescription.startsWith("Binary"))) {
 				name += " - " + objectTypeDescription;
 			}
-			if (parent.getChild(name, true) != null) {
+			Node existing = parent.getChild(name, true);
+			if (existing != null) {
+				Value otVal = existing.getAttribute("object type");
+				Value instVal = existing.getAttribute("object instance number");
+				if (otVal != null && instVal != null && objectTypeDescription.equals(otVal.getString()) 
+						&& instVal.getNumber() != null && instanceNumber == instVal.getNumber().intValue()) {
+					return;
+				}
 				name += oid.getInstanceNumber();
 			}
 			NodeBuilder b = parent.createChild(name, true);
