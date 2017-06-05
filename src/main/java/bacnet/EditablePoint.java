@@ -197,7 +197,7 @@ public abstract class EditablePoint {
 	private void duplicate(String newname) {
 		if (newname != null && newname.length() > 0 && !newname.equals(node.getName())) {
 			Node parent = node.getParent();
-			parent.removeChild(node);
+			parent.removeChild(node, false);
 			node = parent.createChild(newname, true).build();
 		}
 	}
@@ -212,7 +212,7 @@ public abstract class EditablePoint {
 	protected class RemoveHandler implements Handler<ActionResult> {
 		public void handle(ActionResult event) {
 			node.clearChildren();
-			parent.removeChild(node);
+			parent.removeChild(node, false);
 
 			ObjectIdentifier oid = getObjectIdentifier();
 			try {

@@ -257,7 +257,7 @@ public class BacnetLink {
 					connection.restoreLastSession();
 				}
 			} else if (!child.getName().equals("defs")) {
-				node.removeChild(child);
+				node.removeChild(child, false);
 			}
 		}
 	}

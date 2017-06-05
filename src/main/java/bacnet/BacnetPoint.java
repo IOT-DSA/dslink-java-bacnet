@@ -260,7 +260,14 @@ public class BacnetPoint {
 			if (!(objectTypeDescription.startsWith("Analog") || objectTypeDescription.startsWith("Binary"))) {
 				name += " - " + objectTypeDescription;
 			}
-			if (parent.getChild(name, true) != null) {
+			Node existing = parent.getChild(name, true);
+			if (existing != null) {
+				Value otVal = existing.getAttribute("object type");
+				Value instVal = existing.getAttribute("object instance number");
+				if (otVal != null && instVal != null && objectTypeDescription.equals(otVal.getString()) 
+						&& instVal.getNumber() != null && instanceNumber == instVal.getNumber().intValue()) {
+					return;
+				}
 				name += oid.getInstanceNumber();
 			}
 			NodeBuilder b = parent.createChild(name, true);
@@ -474,7 +481,7 @@ public class BacnetPoint {
 		public void handle(ActionResult event) {
 			String newname = event.getParameter("name", ValueType.STRING).getString();
 			if (newname != null && newname.length() > 0 && !newname.equals(node.getName())) {
-				parent.removeChild(node);
+				parent.removeChild(node, false);
 				node = parent.createChild(newname, true).build();
 			}
 			settable = event.getParameter("settable", ValueType.BOOL).getBool();
@@ -498,7 +505,7 @@ public class BacnetPoint {
 	private class RemoveHandler implements Handler<ActionResult> {
 		public void handle(ActionResult event) {
 			node.clearChildren();
-			parent.removeChild(node);
+			parent.removeChild(node, false);
 		}
 	}
 
@@ -937,7 +944,7 @@ public class BacnetPoint {
 			Node unode = node.getChild("units", true);
 			if (unode != null) {
 				if (units == null)
-					node.removeChild("units");
+					node.removeChild("units", false);
 				else if (!units.equals(unode.getValue()))
 					unode.setValue(units);
 			} else {
@@ -1024,7 +1031,7 @@ public class BacnetPoint {
 				node.createChild(name, true).setValueType(ValueType.STRING).setValue(new Value(value)).build();
 		} else {
 			if (propnode != null)
-				node.removeChild(propnode);
+				node.removeChild(propnode, false);
 		}
 	}
 
@@ -1037,7 +1044,7 @@ public class BacnetPoint {
 				node.createChild(name, true).setValueType(ValueType.NUMBER).setValue(new Value(value)).build();
 		} else {
 			if (propnode != null)
-				node.removeChild(propnode);
+				node.removeChild(propnode, false);
 		}
 	}
 
@@ -1055,7 +1062,7 @@ public class BacnetPoint {
 			}
 		} else {
 			if (propnode != null)
-				node.removeChild(propnode);
+				node.removeChild(propnode, false);
 		}
 	}
 
