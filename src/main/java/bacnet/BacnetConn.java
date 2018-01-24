@@ -680,7 +680,7 @@ abstract class BacnetConn {
 				public boolean requestProgress(double progress, ObjectIdentifier oid, PropertyIdentifier pid,
 						UnsignedInteger pin, Encodable value) {
 					if (pid.equals(PropertyIdentifier.objectName)) {
-						String name = toLegalName(value.toString());
+						String name = value.toString();
 						if (value instanceof BACnetError || name.length() < 1) {
 							int instanceNumber = d.getInstanceNumber();
 							String macAddress = Utils.getMac(d);
@@ -701,12 +701,6 @@ abstract class BacnetConn {
 			LOGGER.debug("error: ", e);
 		}
 		LOGGER.debug("Got device name: " + d.getName());
-	}
-
-	static String toLegalName(String s) {
-		if (s == null)
-			return "";
-		return StringUtils.encodeName(s);
 	}
 
 	private DeviceNode setupDeviceNode(final RemoteDevice d, Node child, String name, String mac, Integer instanceNum,
