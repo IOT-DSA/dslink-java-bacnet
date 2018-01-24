@@ -306,7 +306,7 @@ public class DeviceFolder {
 		if (encodable instanceof BACnetError)
 			return;
 		if (pid.equals(PropertyIdentifier.objectName)) {
-			String name = BacnetConn.toLegalName(PropertyValues.getString(encodable));
+			String name = PropertyValues.getString(encodable);
 			if (name.length() < 1) {
 				pt.setObjectName("unnamed device " + unnamedCount);
 				unnamedCount += 1;
